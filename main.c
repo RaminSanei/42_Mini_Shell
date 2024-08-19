@@ -6,21 +6,23 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:59:28 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/09 18:32:02 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/08/19 17:06:38 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
 
 void	initialize_shell_env(t_mini *shell, char **env)
 {
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
-	(shell)->env = env;
-	(shell)->pwd = ft_strdup(pwd);
-	(shell)->oldpwd = ft_strdup(pwd);
-	(shell)->exit_num = 0;
+	shell->env = env;
+	shell->pwd = ft_strdup(pwd);
+	shell->oldpwd = ft_strdup(pwd);
+	shell->exit_num = 0;
 }
 
 int	main(int argc, char **argv, char **env)
@@ -43,13 +45,14 @@ int	main(int argc, char **argv, char **env)
 			else if (shell.line[0] != '\0')
 			{
 				add_history(shell.line);
+				parsing_input(&shell);
 			}
 		}
 	}
 	else
 	{
-		printf("Error: there is no arguments.\n");
-		return (-1);
+		printf(ERROR_NO_ARG);
+		return (EXIT_FAILURE * -1);
 	}
 	return (EXIT_SUCCESS);
 }
