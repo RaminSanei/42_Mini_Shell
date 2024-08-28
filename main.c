@@ -6,13 +6,11 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:59:28 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/19 17:06:38 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/08/28 18:07:51 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 void	initialize_shell_env(t_mini *shell, char **env)
 {
@@ -39,7 +37,7 @@ int	main(int argc, char **argv, char **env)
 			shell.line = readline("@minishell> $ ");
 			if (!shell.line)
 			{
-				write(2, "exit\n", 5);
+				write(2, EXIT, 5);
 				break ;
 			}
 			else if (shell.line[0] != '\0')
