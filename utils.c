@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 14:09:01 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/28 18:36:32 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/08/28 19:35:24 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,10 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 int	strcmp(char *s1, char *s2)
 {
 	return (ft_strncmp(s1, s2, ft_strlen(s1)));
+}
+bool are_strings_equal(char *s1, char *s2)
+{
+    return (ft_strncmp(s1, s2, ft_strlen(s1)) == 0);
 }
 
 int	set_and_return_exit_code(t_mini *data, int code)

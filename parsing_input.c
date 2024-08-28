@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/28 19:18:52 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/08/28 19:36:04 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,17 +72,17 @@ void	assign_token_type(t_list **token_list)
 	current_token = *token_list;
 	while (current_token->next)
 		current_token = current_token->next;
-	if (!strcmp(current_token->content, ""))
+	if (are_strings_equal(current_token->content, ""))
 		current_token->t_type = EMPTY;
-	else if (!strcmp(current_token->content, ">"))
+	else if (are_strings_equal(current_token->content, ">"))
 		current_token->t_type = TRUNC;
-	else if (!strcmp(current_token->content, "|"))
+	else if (are_strings_equal(current_token->content, "|"))
 		current_token->t_type = PIPE;
-	else if (!strcmp(current_token->content, "<"))
+	else if (are_strings_equal(current_token->content, "<"))
 		current_token->t_type = INPUT;
-	else if (!strcmp(current_token->content, "<<"))
+	else if (are_strings_equal(current_token->content, "<<"))
 		current_token->t_type = HEREDOC;
-	else if (!strcmp(current_token->content, ">>"))
+	else if (are_strings_equal(current_token->content, ">>"))
 		current_token->t_type = APPEND;
 	else if (!current_token->prev || current_token->prev->t_type == PIPE
 		|| (current_token->prev->prev
