@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/28 19:36:04 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/08/31 14:14:51 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,32 +87,32 @@ void	assign_token_type(t_list **token_list)
 	else if (!current_token->prev || current_token->prev->t_type == PIPE
 		|| (current_token->prev->prev
 			&& current_token->prev->prev->t_type == HEREDOC))
-		current_token->t_type = COMMAND;
+		current_token->t_type = CMD;
 	else
 		current_token->t_type = ARG;
 }
 
-void	add_token_to_list(t_list **token_list, char *current_token)
-{
-	t_list	*new_token;
-	t_list	*current;
+// void	add_token_to_list(t_list **token_list, char *current_token)
+// {
+// 	t_list	*new_token;
+// 	t_list	*current;
 
-	new_token = (t_list *)safe_malloc(sizeof(t_list));
-	new_token->content = ft_strdup(current_token);
-	new_token->t_type = NULL;
-	new_token->prev = NULL;
-	new_token->next = NULL;
-	if (!*token_list)
-	{
-		*token_list = new_token;
-		return ;
-	}
-	current = *token_list;
-	while (current->next)
-		current = current->next;
-	current->next = new_token;
-	new_token->prev = current;
-}
+// 	new_token = (t_list *)safe_malloc(sizeof(t_list));
+// 	new_token->content = ft_strdup(current_token);
+// 	new_token->t_type = NULL;
+// 	new_token->prev = NULL;
+// 	new_token->next = NULL;
+// 	if (!*token_list)
+// 	{
+// 		*token_list = new_token;
+// 		return ;
+// 	}
+// 	current = *token_list;
+// 	while (current->next)
+// 		current = current->next;
+// 	current->next = new_token;
+// 	new_token->prev = current;
+// }
 
 void	add_token_to_list(t_list **token_list, const char *current_token)
 {
@@ -153,7 +153,7 @@ void	generate_tokens_helper(char **input, t_list *token_list,
 			break ;
 		current_token = extract_token(input, index);
 		add_token_to_list(&token_list, current_token);
-		determine_token_type(&token_list);
+		assign_token_type(&token_list);
 		free(current_token);
 		if (**input == 0)
 			break ;
@@ -173,9 +173,55 @@ t_list	*generate_tokens(char **input)
 	return (token_list);
 }
 
-int	parsing_input(t_mini *shell)
+
+void	free_toks_list(t_list **token_list)
+{
+	t_list	*next_node;
+	t_list	*current_node;
+
+	if (!token_list || !*token_list)
+		return ;
+	current_node = *token_list;
+	while (current_node)
+	{
+		next_node = current_node->next;
+		free(current_node->content);
+		free(current_node);
+		current_node = next_node;
+	}
+	*token_list = NULL;
+}
+// void	process_expansion_and_commands(t_mini *shell)
+// {
+// 	perform_expansion(shell);
+// 	shell->commands = build_command_list(shell->tokens);
+// 	free_toks_list(&(shell->tokens));
+// }
+
+int	tokenize_and_validate_syntax(t_mini *shell)
+{
+	shell->toks = generate_tokens(&(shell->line));
+	if (validate_syntax(shell->toks) == EXIT_FAILURE)
+	{
+		free_toks_list(&(shell->toks));
+		return (set_exit_code(shell, EXIT_FAILURE));
+	}
+	return (EXIT_SUCCESS);
+}
+
+int	validate_quotes(t_mini *shell)
 {
 	if (check_unclosed_quotes(shell->line) == EXIT_FAILURE)
-		return (set_and_return_exit_code(shell, EXIT_FAILURE));
-	shell->toks = generate_tokens(&shell->line);
+		return (set_and_return_exit_code(shell, 130));
+	return (EXIT_SUCCESS);
+}
+
+int	parse_input(t_mini *shell)
+{
+	if (validate_quotes(shell) == 130)
+		return (shell->exit_num);
+	if (tokenize_and_validate_syntax(shell) == EXIT_FAILURE)
+		return (shell->exit_num);
+	// process_expansion_and_commands(context);
+	// return (set_exit_code(context, SUCCESS));
 }

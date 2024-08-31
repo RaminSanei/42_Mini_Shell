@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 14:09:01 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/28 19:35:24 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/08/31 11:18:21 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,48 @@ int	strcmp(char *s1, char *s2)
 {
 	return (ft_strncmp(s1, s2, ft_strlen(s1)));
 }
-bool are_strings_equal(char *s1, char *s2)
+
+char	*ft_strchr(const char *str, int c)
 {
-    return (ft_strncmp(s1, s2, ft_strlen(s1)) == 0);
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == (char)c)
+			return ((char *)(str + i));
+		i++;
+	}
+	if (str[i] == (char)c)
+		return ((char *)(str + i));
+	return (NULL);
+}
+char	*ft_strstr(const char *haystack, const char *needle)
+{
+	const char	*h;
+	const char	*n;
+
+	if (*needle == '\0')
+		return ((char *)haystack);
+	while (*haystack)
+	{
+		h = haystack;
+		n = needle;
+		while (*n && *h == *n)
+		{
+			h++;
+			n++;
+		}
+		if (*n == '\0')
+			return ((char *)haystack);
+		haystack++;
+	}
+	return (NULL);
+}
+
+bool	are_strings_equal(char *s1, char *s2)
+{
+	return (ft_strncmp(s1, s2, ft_strlen(s1)) == 0);
 }
 
 int	set_and_return_exit_code(t_mini *data, int code)

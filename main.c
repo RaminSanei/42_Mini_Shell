@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:59:28 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/28 18:07:51 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/08/31 13:58:09 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	initialize_shell_env(t_mini *shell, char **env)
 	shell->exit_num = 0;
 }
 
-int	main(int argc, char **argv, char **env)
+int	main(int argc, char *argv[], char *env[])
 {
 	t_mini	shell;
 
