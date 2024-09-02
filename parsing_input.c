@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/31 14:14:51 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/08/31 18:25:11 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,6 @@ t_list	*generate_tokens(char **input)
 	return (token_list);
 }
 
-
 void	free_toks_list(t_list **token_list)
 {
 	t_list	*next_node;
@@ -191,12 +190,12 @@ void	free_toks_list(t_list **token_list)
 	}
 	*token_list = NULL;
 }
-// void	process_expansion_and_commands(t_mini *shell)
-// {
-// 	perform_expansion(shell);
-// 	shell->commands = build_command_list(shell->tokens);
-// 	free_toks_list(&(shell->tokens));
-// }
+void	process_expansion_and_commands(t_mini *shell)
+{
+	perform_expansion(shell);
+	shell->cmd = build_command_list(shell->toks);
+	free_toks_list(&(shell->toks));
+}
 
 int	tokenize_and_validate_syntax(t_mini *shell)
 {
@@ -204,7 +203,7 @@ int	tokenize_and_validate_syntax(t_mini *shell)
 	if (validate_syntax(shell->toks) == EXIT_FAILURE)
 	{
 		free_toks_list(&(shell->toks));
-		return (set_exit_code(shell, EXIT_FAILURE));
+		return (set_and_return_exit_code(shell, EXIT_FAILURE));
 	}
 	return (EXIT_SUCCESS);
 }
@@ -222,6 +221,6 @@ int	parse_input(t_mini *shell)
 		return (shell->exit_num);
 	if (tokenize_and_validate_syntax(shell) == EXIT_FAILURE)
 		return (shell->exit_num);
-	// process_expansion_and_commands(context);
-	// return (set_exit_code(context, SUCCESS));
+	process_expansion_and_commands(shell);
+	return (set_and_return_exit_code(shell, EXIT_SUCCESS));
 }
