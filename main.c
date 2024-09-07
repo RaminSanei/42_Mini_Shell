@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:59:28 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/05 14:53:28 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/05 17:33:26 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	main(int argc, char *argv[], char *env[])
 			{
 				add_history(shell.line);
 				parse_input(&shell);
+				// run_command_execution(&shell, env);
 			}
 		}
 	}
