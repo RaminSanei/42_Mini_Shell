@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/31 18:25:11 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/08 09:47:20 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,27 +92,6 @@ void	assign_token_type(t_list **token_list)
 		current_token->t_type = ARG;
 }
 
-// void	add_token_to_list(t_list **token_list, char *current_token)
-// {
-// 	t_list	*new_token;
-// 	t_list	*current;
-
-// 	new_token = (t_list *)safe_malloc(sizeof(t_list));
-// 	new_token->content = ft_strdup(current_token);
-// 	new_token->t_type = NULL;
-// 	new_token->prev = NULL;
-// 	new_token->next = NULL;
-// 	if (!*token_list)
-// 	{
-// 		*token_list = new_token;
-// 		return ;
-// 	}
-// 	current = *token_list;
-// 	while (current->next)
-// 		current = current->next;
-// 	current->next = new_token;
-// 	new_token->prev = current;
-// }
 
 void	add_token_to_list(t_list **token_list, const char *current_token)
 {

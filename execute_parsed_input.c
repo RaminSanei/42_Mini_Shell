@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/07 10:28:44 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/07 10:44:39 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	run_command_execution(t_mini *shell, char **env)
 
 	if (save_fds(&saved_stdin, &saved_stdout, shell) == 130)
 		return (130);
-	// handle_heredoc(shell);
+	handle_heredoc(shell);
 	// if (shell->cmd && shell->cmd->content[0]
 	// 	&& is_builtin_command(shell->cmd->content) && shell->cmd->next == NULL)
 	// {
