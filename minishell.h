@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:41:18 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/08 09:57:18 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/08 11:08:05 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # define ERROR_UNEXPECTED_PIPE -2
 # define ERROR_UNEXPECTED_NEWLINE -3
 # define ERROR_INVALID_SYNTAX -4
+# define NUM_B_CMD 7
 
 typedef enum e_token_type
 {
@@ -44,6 +45,15 @@ typedef enum e_token_type
 	PIPE,
 	END
 }						t_token_type;
+////////////////////////////////////////////////////////////////////////////////
+typedef int				(*t_cmd_func)(char **argv, t_mini *obj);
+
+typedef struct s_biltin_c
+{
+	char				name[10];
+	t_cmd_func			function;
+}						t_biltin_c;
+////////////////////////////////////////////////////////////////////////////////
 
 typedef struct s_list_c
 {
@@ -101,6 +111,8 @@ void					perform_expansion(t_mini *shell);
 t_list_c				*build_command_list(t_list *toks);
 int						run_command_execution(t_mini *shell, char **env);
 void					handle_heredoc(t_mini *shell);
+bool					is_builtin_command(char **command);
+void					init_biltin_cmd(t_biltin_c commands[]);
 
 // libft functions
 char					*ft_strdup(const char *s1);
