@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:19 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 12:48:11 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/09 13:41:55 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	cd_to_previous_directory(t_mini *obj)
 	return (EXIT_SUCCESS);
 }
 
-int	cd(t_mini *obj, char *argv[])
+int	ft_cd(t_mini *obj, char *argv[])
 {
 	if (argv[1] == NULL)
 		return (EXIT_SUCCESS);

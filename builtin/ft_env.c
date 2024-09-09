@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:26 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 13:34:18 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/09 13:44:11 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	print_env_list(t_list_e *env)
 	}
 }
 
-int	env(char *argv[], t_mini *obj)
+int	ft_env(t_mini *obj, char *argv[])
 {
 	(void)argv;
 	print_env_list(obj->env);

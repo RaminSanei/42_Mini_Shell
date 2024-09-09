@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:41:18 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 13:34:13 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/09 19:00:03 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # define ERROR_UNEX_NLINE "bash: syntax error near unexpected token `newline'\n"
 # define ERROR_UNEX_PIPE "bash: syntax error near unexpected token `|'\n"
 # define ERROR_DIR "cd: no such file or directory: "
+# define EXIT_ERORR_NUMERIC "exit\nminishell: exit: numeric argument required\n"
+# define EXIT_ERORR_MANY "exit: too many arguments.\n"
 
 // error numbers
 # define MINUS1 -1
@@ -118,6 +120,7 @@ void					*safe_malloc(size_t size);
 void					skip_whitespace(char **input);
 bool					is_separator(char **str, char quote_char);
 int						allocate_memory_for_token(char *input);
+// int						allocate_memory_for_token(char *input);
 int						validate_quotes(t_mini *shell);
 int						validate_syntax(t_list *toks);
 void					perform_expansion(t_mini *shell);
@@ -129,9 +132,11 @@ void					init_biltin_cmd(t_biltin_c commands[]);
 void					set_environment_variable(char *str, t_list_e **env);
 int						find_key_length(const char *str);
 void					add_env_variable(t_list_e **env, const char *str);
-int						cd(t_mini *obj, char *argv[]);
-int						echo(char *argv[], t_mini *obj);
-int						env(char *argv[], t_mini *obj);
+int						ft_cd(t_mini *obj, char *argv[]);
+int						ft_echo(t_mini *obj, char *argv[]);
+int						ft_env(t_mini *obj, char *argv[]);
+int						ft_exit(t_mini *obj, char *argv[]);
+void					free_string_array(char *array[]);
 
 //////////////////////////////////// mini_shell functions////////////////////////////////////
 #endif

@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/07 10:44:39 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/09 13:53:09 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	handle_error_void(t_mini *shell, int result, const char *error_msg)
 	{
 		ft_putstr_fd("minishell error: ", STDERR_FILENO);
 		perror(error_msg);
-		exit(determine_exit_code(shell, 130));
+		exit(set_and_return_exit_code(shell, 130));
 	}
 }
 ///// 3. close_fds for closing file descriptors
