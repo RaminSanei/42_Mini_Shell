@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 15:02:50 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/05 15:15:12 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/09 12:24:07 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*lookup_env_variable(t_list_e *env_list, const char *key)
 	key_length = ft_strlen(key);
 	while (env_list)
 	{
-		key_equal_length = check_equal(env_list->content);
+		key_equal_length = find_key_length(env_list->content);
 		if (ft_strncmp(key, env_list->content, key_length) == 0
 			&& ft_strncmp(env_list->content, key, key_equal_length) == 0)
 		{

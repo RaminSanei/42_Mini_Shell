@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:41:18 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/08 11:08:05 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/09 12:54:55 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # define EXIT "exit\n"
 # define ERROR_UNEX_NLINE "bash: syntax error near unexpected token `newline'\n"
 # define ERROR_UNEX_PIPE "bash: syntax error near unexpected token `|'\n"
+# define ERROR_DIR "cd: no such file or directory: "
 
 // error numbers
 # define MINUS1 -1
@@ -97,8 +98,20 @@ typedef struct s_mini
 	t_list_c			*cmd;
 }						t_mini;
 
+//////////////////////////////////// libft functions////////////////////////////////////
+char					*ft_strdup(const char *s1);
+size_t					ft_strlen(const char *str);
+void					ft_putstr_fd(char *s, int fd);
+int						strcmp(char *s1, char *s2);
+char					*ft_strchr(const char *str, int c);
+char					*ft_strstr(const char *haystack, const char *needle);
+char					*ft_strnjoin(char *s1, char *s2, int flag);
+int						ft_strncmp(const char *s1, const char *s2, size_t n);
+
+//////////////////////////////////// libft functions////////////////////////////////////
+
+//////////////////////////////////// mini_shell functions////////////////////////////////////
 void					sigint_handler(int signal);
-// int						parsing_input(t_mini *shell);
 int						parse_input(t_mini *shell);
 int						set_and_return_exit_code(t_mini *data, int code);
 void					*safe_malloc(size_t size);
@@ -113,15 +126,10 @@ int						run_command_execution(t_mini *shell, char **env);
 void					handle_heredoc(t_mini *shell);
 bool					is_builtin_command(char **command);
 void					init_biltin_cmd(t_biltin_c commands[]);
+void					set_environment_variable(char *str, t_list_e **env);
+int						find_key_length(const char *str);
+void					add_env_variable(t_list_e **env, const char *str);
+void					echo(char **argv, t_mini *obj);
 
-// libft functions
-char					*ft_strdup(const char *s1);
-size_t					ft_strlen(const char *str);
-void					ft_putstr_fd(char *s, int fd);
-int						strcmp(char *s1, char *s2);
-char					*ft_strchr(const char *str, int c);
-char					*ft_strstr(const char *haystack, const char *needle);
-char					*ft_strnjoin(char *s1, char *s2, int flag);
-int						ft_strncmp(const char *s1, const char *s2, size_t n);
-
+//////////////////////////////////// mini_shell functions////////////////////////////////////
 #endif

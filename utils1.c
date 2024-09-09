@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 15:28:58 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/28 15:30:44 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/09 12:16:42 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,18 @@ int	allocate_memory_for_token(char *input)
 		input++;
 	}
 	return (index);
+}
+
+int	find_key_length(const char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+	{
+		if (str[i] == ' ' || str[i] == '?')
+			return (-1);
+		i++;
+	}
+	return ((str[i] == '=') ? i : 0);
 }
