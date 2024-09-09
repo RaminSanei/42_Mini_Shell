@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:23 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 13:19:10 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/09 13:24:40 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static char	*concatenate_args(char **argv)
 	return (result);
 }
 
-void	echo(char **argv, t_mini *obj)
+int	echo(char *argv[], t_mini *obj)
 {
 	char	*str;
 

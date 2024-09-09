@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:41:18 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 12:54:55 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/09 13:34:13 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,9 @@ void					init_biltin_cmd(t_biltin_c commands[]);
 void					set_environment_variable(char *str, t_list_e **env);
 int						find_key_length(const char *str);
 void					add_env_variable(t_list_e **env, const char *str);
-void					echo(char **argv, t_mini *obj);
+int						cd(t_mini *obj, char *argv[]);
+int						echo(char *argv[], t_mini *obj);
+int						env(char *argv[], t_mini *obj);
 
 //////////////////////////////////// mini_shell functions////////////////////////////////////
 #endif
