@@ -6,11 +6,12 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 13:53:09 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/10 17:24:43 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 ///// 1. handle_error_int for dup and fork
 int	handle_error_int(t_mini *shell, int result, const char *error_msg)
 {
@@ -41,7 +42,6 @@ void	safely_close_file_descriptors(int descriptor1, int descriptor2)
 		close(descriptor2);
 }
 
-
 int	save_fds(int *saved_stdin, int *saved_stdout, t_mini *shell)
 {
 	// *saved_stdin = duplicate1_fd_error(shell, dup(STDIN_FILENO));
@@ -63,13 +63,17 @@ void	restore_fds(t_mini *shell, int saved_stdin, int saved_stdout)
 	safely_close_file_descriptors(saved_stdin, saved_stdout);
 }
 
-// int	execute_builtin_commands(t_mini *shell, t_list_c *current_command)
-// {
-// 	if (apply_redirections(current_command) == 130)
-// 		return (set_and_return_exit_code(shell, 130), 130);
-// 	run_builtin(shell, current_command->content);
-// 	return (EXIT_SUCCESS);
-// }
+int	execute_builtin_commands(t_mini *shell, t_list_c *current_command)
+{
+	if (apply_redirections(current_command) == EXIT_FAILURE)
+	{
+		set_and_return_exit_code(shell, 130);
+		return (130);
+	}
+	// return (set_and_return_exit_code(shell, 130), 130);
+	execute_builtin_command(shell, current_command->content);
+	return (EXIT_SUCCESS);
+}
 
 int	run_command_execution(t_mini *shell, char **env)
 {
@@ -80,12 +84,12 @@ int	run_command_execution(t_mini *shell, char **env)
 	if (save_fds(&saved_stdin, &saved_stdout, shell) == 130)
 		return (130);
 	handle_heredoc(shell);
-	// if (shell->cmd && shell->cmd->content[0]
-	// 	&& is_builtin_command(shell->cmd->content) && shell->cmd->next == NULL)
-	// {
-	// 	if (execute_builtin_commands(shell, shell->cmd) == 130)
-	// 		return (130);
-	// }
+	if (shell->cmd && shell->cmd->content[0]
+		&& is_builtin_command(shell->cmd->content) && shell->cmd->next == NULL)
+	{
+		if (execute_builtin_commands(shell, shell->cmd) == 130)
+			return (130);
+	}
 	// else if (shell->cmd && shell->cmd->content[0])
 	// {
 	// 	run_execution_loop(shell, saved_stdin, saved_stdout, env);
