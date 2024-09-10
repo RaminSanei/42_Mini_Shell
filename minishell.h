@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:41:18 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 19:00:03 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/10 10:59:16 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define ERROR_DIR "cd: no such file or directory: "
 # define EXIT_ERORR_NUMERIC "exit\nminishell: exit: numeric argument required\n"
 # define EXIT_ERORR_MANY "exit: too many arguments.\n"
+# define ERROR_GET_DIR "Error getting current working directory"
 
 // error numbers
 # define MINUS1 -1
@@ -35,18 +36,19 @@
 # define ERROR_UNEXPECTED_NEWLINE -3
 # define ERROR_INVALID_SYNTAX -4
 # define NUM_B_CMD 7
+# define PWD_BUFFER_SIZE 200
 
 typedef enum e_token_type
 {
 	EMPTY,
 	CMD,
+	END,
 	ARG,
 	APPEND,
 	INPUT,
 	TRUNC,
 	HEREDOC,
 	PIPE,
-	END
 }						t_token_type;
 ////////////////////////////////////////////////////////////////////////////////
 typedef int				(*t_cmd_func)(char **argv, t_mini *obj);
@@ -137,6 +139,7 @@ int						ft_echo(t_mini *obj, char *argv[]);
 int						ft_env(t_mini *obj, char *argv[]);
 int						ft_exit(t_mini *obj, char *argv[]);
 void					free_string_array(char *array[]);
+int						apply_redirections(t_list_c *command);
 
 //////////////////////////////////// mini_shell functions////////////////////////////////////
 #endif
