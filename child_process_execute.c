@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:31 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/11 16:00:06 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 19:27:03 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,14 @@ char	**get_path_env(t_mini *obj)
 	{
 		if (ft_strncmp(env_temp->content, "PATH=", 5) == 0)
 		{
-			path_array = split_string_by_delimiter(env_temp->content + 5,
-			':');
+			path_array = split_string_by_delimiter(env_temp->content + 5, ':');
 			break ;
 		}
 		env_temp = env_temp->next;
 	}
 	if (!path_array)
 	{
-		perror("Could not find PATH variable");
+		perror(ERROR_PATH);
 		exit(set_and_return_exit_code(obj, EXIT_FAILURE));
 	}
 	return (path_array);
@@ -92,7 +91,7 @@ char	*get_command_path(t_mini *obj, const char *cmd)
 	cmd_path = find_executable_in_path(path_array, cmd);
 	if (!cmd_path)
 	{
-		perror("Command not found");
+		perror(CMD_N_F);
 		exit(set_and_return_exit_code(obj, EXIT_FAILURE));
 	}
 	return (cmd_path);

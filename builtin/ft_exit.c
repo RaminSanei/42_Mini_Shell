@@ -6,13 +6,13 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:14 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 19:35:32 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 17:21:31 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./minishell.h"
 
-////////////////////////////////////// free_memory_tools////////////////////////////////////
+////////////////////////////////////// free_memory_tools///////////////////////
 
 void	free_env_node(t_list_e *node)
 {
@@ -40,8 +40,6 @@ void	clear_env_list(t_list_e **env)
 }
 
 // void	clear_env_list(t_list_e ) // TODO
-// {
-// }
 char	*generate_tmp_filename(int index)
 {
 	return (ft_strnjoin("h", ft_itoa(index), 3));

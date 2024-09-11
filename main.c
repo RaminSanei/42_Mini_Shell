@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:59:28 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/05 17:33:26 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 17:42:24 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	initialize_shell_env(t_mini *shell, char **env)
 
 	pwd = getcwd(NULL, 0);
 	shell->env = env;
-	shell->pwd = ft_strdup(pwd);
-	shell->oldpwd = ft_strdup(pwd);
 	shell->exit_num = 0;
+	shell->oldpwd = ft_strdup(pwd);
+	shell->pwd = ft_strdup(pwd);
 }
 
 int	main(int argc, char *argv[], char *env[])
@@ -44,7 +44,7 @@ int	main(int argc, char *argv[], char *env[])
 			{
 				add_history(shell.line);
 				parse_input(&shell);
-				// run_command_execution(&shell, env);
+				run_command_execution(&shell, env);
 			}
 		}
 	}

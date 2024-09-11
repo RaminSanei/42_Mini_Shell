@@ -6,13 +6,13 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/10 18:03:36 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 19:27:21 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	execute_builtin(char **argv, t_mini *obj, t_biltin_c *builtins)
+int	execute_builtin(char **argv, t_mini *obj, t_builtin_c *builtins)
 {
 	int	i;
 
@@ -30,7 +30,7 @@ int	execute_builtin(char **argv, t_mini *obj, t_biltin_c *builtins)
 
 int	execute_builtin_command(t_mini *obj, char *argv[])
 {
-	t_biltin_c	builtins[NUM_B_CMD];
+	t_builtin_c	builtins[NUM_B_CMD];
 
 	init_builtin_cmd(builtins);
 	if (argv[0] == NULL)
@@ -39,7 +39,7 @@ int	execute_builtin_command(t_mini *obj, char *argv[])
 	}
 	if (execute_builtin(argv, obj, builtins) == MINUS1)
 	{
-		printf("Command not found: %s\n", argv[0]);
+		printf(CMD_N_F " %s\n", argv[0]);
 		return (MINUS1);
 	}
 	return (EXIT_SUCCESS);

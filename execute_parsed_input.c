@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/10 17:24:43 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 17:39:18 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,14 @@ void	restore_fds(t_mini *shell, int saved_stdin, int saved_stdout)
 
 int	execute_builtin_commands(t_mini *shell, t_list_c *current_command)
 {
+	int	exit_status;
+
 	if (apply_redirections(current_command) == EXIT_FAILURE)
 	{
-		set_and_return_exit_code(shell, 130);
-		return (130);
+		exit_status = set_and_return_exit_code(shell, 130);
+		return (exit_status);
+		// set_and_return_exit_code(shell, 130);
+		// return (130);
 	}
 	// return (set_and_return_exit_code(shell, 130), 130);
 	execute_builtin_command(shell, current_command->content);
@@ -90,11 +94,11 @@ int	run_command_execution(t_mini *shell, char **env)
 		if (execute_builtin_commands(shell, shell->cmd) == 130)
 			return (130);
 	}
-	// else if (shell->cmd && shell->cmd->content[0])
-	// {
-	// 	run_execution_loop(shell, saved_stdin, saved_stdout, env);
-	// 	wait_for_all_processes(shell, &exit_status);
-	// }
+	else if (shell->cmd && shell->cmd->content[0])
+	{
+		run_execution_loop(shell, saved_stdin, saved_stdout, env);
+		wait_for_all_processes(shell, &exit_status);
+	}
 	restore_fds(shell, saved_stdin, saved_stdout);
 	return (130);
 }

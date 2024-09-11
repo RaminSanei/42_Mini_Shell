@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:31 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/11 12:07:03 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 17:30:19 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ void	execute_command_or_builtin(t_mini *data, t_list_c *current_cmd,
 {
 	if (current_cmd->content[0] && is_builtin_command(current_cmd->content))
 		execute_builtin_command(data, current_cmd->content);
-	// else
-		// child_process_execute(data, exec_path, current_cmd, env);//TODO
+	else
+		child_process_execute(data, current_cmd, env);
 }
 
 void	execute_child_task(t_mini *data, t_list_c *current_cmd, int pipe_fds[2],
