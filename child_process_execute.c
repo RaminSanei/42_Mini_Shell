@@ -6,26 +6,36 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:31 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/11 15:38:55 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 16:00:06 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./minishell.h"
 
-char	*construct_full_path(const char *path_element, const char *cmd)
+char	*construct_full_path_helper(const char *path_element, const char *cmd,
+		int path_len, int cmd_len)
 {
 	char	*full_path;
+
+	full_path = safe_malloc(path_len + cmd_len + 2);
+	ft_strlcpy(full_path, path_element, path_len + 1);
+	ft_strlcpy(full_path + path_len, "/", 2);
+	ft_strlcpy(full_path + path_len + 1, cmd, cmd_len + 1);
+	return (full_path);
+}
+
+char	*construct_full_path(const char *path_element, const char *cmd)
+{
 	int		path_len;
 	int		cmd_len;
+	char	*full_path;
 
 	if (!path_element || !cmd)
 		return (NULL);
 	path_len = ft_strlen(path_element);
 	cmd_len = ft_strlen(cmd);
-	full_path = safe_malloc(path_len + cmd_len + 2);
-	ft_strlcpy(full_path, path_element, path_len + 1);
-	ft_strlcpy(full_path + path_len, "/", 2);
-	ft_strlcpy(full_path + path_len + 1, cmd, cmd_len + 1);
+	full_path = construct_full_path_helper(path_element, cmd, path_len,
+			cmd_len);
 	return (full_path);
 }
 
@@ -59,7 +69,8 @@ char	**get_path_env(t_mini *obj)
 	{
 		if (ft_strncmp(env_temp->content, "PATH=", 5) == 0)
 		{
-			// path_array = split_string_by_delimiter(env_temp->content + 5, ':');
+			path_array = split_string_by_delimiter(env_temp->content + 5,
+			':');
 			break ;
 		}
 		env_temp = env_temp->next;
