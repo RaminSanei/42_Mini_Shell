@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:31 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/10 11:21:12 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 11:00:13 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,18 +89,18 @@ int	apply_redirections(t_list_c *command)
 		if (current_lexer_node->index == TRUNC)
 		{
 			if (handle_truncate_redirection(current_lexer_node) == EXIT_FAILURE)
-				return (EXIT_FAILURE);
+				return (130);
 		}
 		else if (current_lexer_node->index == APPEND)
 		{
 			if (handle_append_redirection(current_lexer_node) == EXIT_FAILURE)
-				return (EXIT_FAILURE);
+				return (130);
 		}
 		else if (current_lexer_node->index == INPUT
 			|| current_lexer_node->index == HEREDOC)
 		{
 			if (handle_input_redirection(current_lexer_node) == EXIT_FAILURE)
-				return (EXIT_FAILURE);
+				return (130);
 		}
 		current_lexer_node = current_lexer_node->next;
 	}

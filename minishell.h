@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:41:18 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/10 10:59:16 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 12:47:00 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 # define ERROR_UNEXPECTED_NEWLINE -3
 # define ERROR_INVALID_SYNTAX -4
 # define NUM_B_CMD 7
+# define ERROR130 130
 # define PWD_BUFFER_SIZE 200
 
 typedef enum e_token_type
@@ -100,6 +101,7 @@ typedef struct s_mini
 	t_list				*toks;
 	t_list_e			*env;
 	t_list_c			*cmd;
+	int					*pid;
 }						t_mini;
 
 //////////////////////////////////// libft functions////////////////////////////////////
@@ -122,7 +124,6 @@ void					*safe_malloc(size_t size);
 void					skip_whitespace(char **input);
 bool					is_separator(char **str, char quote_char);
 int						allocate_memory_for_token(char *input);
-// int						allocate_memory_for_token(char *input);
 int						validate_quotes(t_mini *shell);
 int						validate_syntax(t_list *toks);
 void					perform_expansion(t_mini *shell);
@@ -140,6 +141,17 @@ int						ft_env(t_mini *obj, char *argv[]);
 int						ft_exit(t_mini *obj, char *argv[]);
 void					free_string_array(char *array[]);
 int						apply_redirections(t_list_c *command);
-
+int						execute_builtin_command(t_mini *obj, char *argv[]);
+void					safely_close_file_descriptors(int descriptor1,
+							int descriptor2);
+void					handle_error_void(t_mini *shell, int result,
+							const char *error_msg);
+int						handle_error_int(t_mini *shell, int result,
+							const char *error_msg);
+int						get_command_count(t_mini *obj);
+void					execute_child_task(t_mini *data, t_list_c *current_cmd,
+							int pipe_fds[2], char **env);
+char					**split_string_by_delimiter(const char *str,
+							char delimiter);
 //////////////////////////////////// mini_shell functions////////////////////////////////////
 #endif
