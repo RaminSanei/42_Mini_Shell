@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:31 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/11 11:00:13 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 17:26:15 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ int	setup_redirection(const char *file_path, int flags, int mode, int target_fd)
 	if (dup2(fd, target_fd) < 0)
 	{
 		ft_putstr_fd("Minishell error: redirection failed\n", STDERR_FILENO);
-		close_file_descriptor(fd);
+		// close_file_descriptor(fd);
+		close(fd);
 		return (EXIT_FAILURE);
 	}
-	close_file_descriptor(fd);
+	// close_file_descriptor(fd);
+	close(fd);
 	return (EXIT_SUCCESS);
 }
 
@@ -76,6 +78,27 @@ int	handle_truncate_redirection(t_list_l *lexer_node)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
+
+// int	apply_redirections_helper(t_list_l *current_lexer_node)
+// {
+// 	if (current_lexer_node->index == TRUNC)
+// 	{
+// 		if (handle_truncate_redirection(current_lexer_node) == EXIT_FAILURE)
+// 			return (130);
+// 	}
+// 	else if (current_lexer_node->index == APPEND)
+// 	{
+// 		if (handle_append_redirection(current_lexer_node) == EXIT_FAILURE)
+// 			return (130);
+// 	}
+// 	else if (current_lexer_node->index == INPUT
+// 		|| current_lexer_node->index == HEREDOC)
+// 	{
+// 		if (handle_input_redirection(current_lexer_node) == EXIT_FAILURE)
+// 			return (130);
+// 	}
+// 	current_lexer_node = current_lexer_node->next;
+// }
 
 int	apply_redirections(t_list_c *command)
 {
