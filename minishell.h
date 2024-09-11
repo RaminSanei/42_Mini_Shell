@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:41:18 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/11 12:47:00 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/11 12:52:00 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,8 @@ void					handle_error_void(t_mini *shell, int result,
 							const char *error_msg);
 int						handle_error_int(t_mini *shell, int result,
 							const char *error_msg);
+void					run_execution_loop(t_mini *obj, int main_fd_in,
+							int main_fd_out, char **env);
 int						get_command_count(t_mini *obj);
 void					execute_child_task(t_mini *data, t_list_c *current_cmd,
 							int pipe_fds[2], char **env);
