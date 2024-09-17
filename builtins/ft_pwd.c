@@ -6,11 +6,11 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:35 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/10 09:37:05 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/15 16:14:39 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minishell.h"
+#include "../minishell.h"
 
 int	get_current_directory(char *buffer, size_t size)
 {
@@ -34,9 +34,9 @@ int	handle_pwd(void)
 	return (MINUS1);
 }
 
-int	ft_pwd(t_mini *obj, char *argv[])
+int	built_pwd(t_mini *shell, char *argv[])
 {
 	(void)argv;
-	(void)obj;
+	(void)shell;
 	return (handle_pwd());
 }

@@ -6,95 +6,88 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:23 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 13:43:59 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 13:09:26 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minishell.h"
+#include "../minishell.h"
 
-bool	isall_char(const char *str, char c)
+bool	all_chars_valid(const char *line, char c)
 {
-	int	i;
+	int	k;
 
-	if (str[0] != '-')
+	if (line[0] != '-')
 		return (false);
-	i = 1;
-	while (str[i] != '\0')
+	k = 1;
+	while (line[k] != '\0')
 	{
-		if (str[i] != c)
+		if (line[k] != c)
 			return (false);
-		i++;
+		k++;
 	}
 	return (true);
 }
 
-static char	*concat_with_delim(char *str, const char *to_add, int free_str)
+static char	*concat_with_delim(char *line, const char *to_add)
 {
 	char	*new_str;
 	size_t	str_len;
 	size_t	add_len;
 
-	str_len = (str) ? strlen(str) : 0;
+	str_len = (line) ? strlen(line) : 0;
 	add_len = strlen(to_add);
-	new_str = malloc(str_len + add_len + 1);
-	if (!new_str)
-		return (NULL);
-	if (str)
-	{
-		memcpy(new_str, str, str_len);
-		free(str);
-	}
+	new_str = safe_malloc(str_len + add_len + 1);
+	if (line)
+		memcpy(new_str, line, str_len);
 	memcpy(new_str + str_len, to_add, add_len + 1);
 	return (new_str);
 }
 
-char	*ft_cat(char **argv)
+char	*join_strings(char *args[])
 {
-	char	*str;
-	int		i;
-	int		new_line;
+	char	*line;
+	bool	parsed_line;
+	int		j;
 
-	str = NULL;
-	i = 1;
-	new_line = 1;
-	if (argv[i] && ft_isall_char(argv[i], 'n'))
+	line = NULL;
+	j = 1;
+	parsed_line = false;
+	if (args[j] && all_chars_valid(args[j], 'n'))
 	{
-		new_line = 0;
-		i++;
+		parsed_line = !parsed_line;
+		j++;
 	}
-	if (!argv[i])
+	if (!args[j])
 		return (strdup(""));
-	while (argv[i])
+	while (args[j])
 	{
-		str = concat_with_delim(str, argv[i], 0);
-		if (argv[i + 1])
-			str = concat_with_delim(str, " ", 1);
-		i++;
+		line = concat_with_delim(line, args[j]);
+		if (args[j + 1])
+			line = concat_with_delim(line, " ");
+		j++;
 	}
-	if (new_line)
-		str = concat_with_delim(str, "\n", 1);
-	return (str);
+	if (!parsed_line)
+		line = concat_with_delim(line, "\n");
+	return (line);
 }
 
-//////////////////////echo////////////////////////
-
-static char	*concatenate_args(char **argv)
+static char	*concatenate_args(char *args[])
 {
 	char	*result;
 
-	result = ft_cat(argv);
+	result = join_strings(args);
 	return (result);
 }
 
-int	ft_echo(t_mini *obj, char *argv[])
+int	built_echo(t_mini *shell, char *argv[])
 {
-	char	*str;
+	char	*line;
 
-	(void)obj;
-	str = concatenate_args(argv);
-	if (!str)
+	line = concatenate_args(argv);
+	if (!line)
 		return (MINUS1);
-	printf("%s", str);
-	free(str);
+	printf("%s", line);
+	free(line);
+	(void)shell;
 	return (EXIT_SUCCESS);
 }

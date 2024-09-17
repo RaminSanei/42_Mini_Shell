@@ -1,41 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wait_for_all_processes.c                           :+:      :+:    :+:   */
+/*   configure_streams.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:31 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/16 10:56:12 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/16 09:09:15 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	wait_for_child_process(t_mini *shell, int process_index,
-		int *exit_status)
+int	configure_input_stream(t_list_l *red)
 {
-	waitpid(shell->process_num[process_index], exit_status, 0);
-	set_and_return_drop_num(shell, *exit_status);
+	return (configure_stream_routing(red->content, O_RDONLY, 0, STDIN_FILENO));
 }
 
-void	release_memory(t_mini *shell)
+int	configure_append_stream(t_list_l *red)
 {
-	if (shell->process_num)
-		free(shell->process_num);
+	return (configure_stream_routing(red->content,
+			O_CREAT | O_WRONLY | O_APPEND, 0644, STDOUT_FILENO));
 }
 
-void	wait_for_all_processes(t_mini *shell, int *exit_status)
+int	configure_truncate_stream(t_list_l *red)
 {
-	int	num_processes;
-	int	k;
-
-	num_processes = get_action_count(shell);
-	k = 0;
-	while (k < num_processes)
-	{
-		wait_for_child_process(shell, k, exit_status);
-		k++;
-	}
-	release_memory(shell);
+	return (configure_stream_routing(red->content, O_CREAT | O_WRONLY | O_TRUNC,
+			0644, STDOUT_FILENO));
 }

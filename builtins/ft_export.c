@@ -6,18 +6,18 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:31 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/11 19:24:05 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 13:11:15 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minishell.h"
+#include "../minishell.h"
 
 void	handle_export_error(const char *arg)
 {
 	printf(INVALID_CTX " %s\n", arg);
 }
 
-int	process_export_arg(t_mini *obj, const char *arg)
+int	process_export_arg(t_mini *shell, char *arg)
 {
 	int	equal_position;
 
@@ -29,21 +29,26 @@ int	process_export_arg(t_mini *obj, const char *arg)
 	}
 	else if (equal_position != 0)
 	{
-		set_environment_variable(arg, &obj->env);
+		set_environment_variable(arg, &shell->inf);
 	}
 	return (EXIT_SUCCESS);
 }
 
-int	ft_export(t_mini *obj, char *argv[])
+int	built_export(t_mini *shell, char *argv[])
 {
-	int	i;
+	int	k;
 
-	i = 1;
-	while (argv[i] != NULL)
+	k = 1;
+	if (argv[1] == NULL)
 	{
-		if (process_export_arg(obj, argv[i]) == MINUS1)
+		built_env(shell, argv);
+		return (EXIT_SUCCESS);
+	}
+	while (argv[k] != NULL)
+	{
+		if (process_export_arg(shell, argv[k]) == MINUS1)
 			return (MINUS1);
-		i++;
+		k++;
 	}
 	return (EXIT_SUCCESS);
 }

@@ -6,80 +6,78 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:43 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 12:43:57 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 13:16:43 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minishell.h"
+#include "../minishell.h"
 
-/////////////add_env_variable/////////////
-static t_list_e	*create_env_node(const char *str, t_list_e *prev)
+static t_list_e	*create_inf_node(char *line, t_list_e *b_ward)
 {
 	t_list_e	*new_node;
 
 	new_node = safe_malloc(sizeof(t_list_e));
-	new_node->content = ft_strdup(str);
+	new_node->content = ft_strdup(line);
 	if (!new_node->content)
 	{
 		free(new_node);
 		return (NULL);
 	}
-	new_node->prev = prev;
-	new_node->next = NULL;
+	new_node->b_ward = b_ward;
+	new_node->f_ward = NULL;
 	return (new_node);
 }
 
-void	add_env_variable(t_list_e **env, const char *str)
+void	add_inf_variable(t_list_e **inf, char *line)
 {
 	t_list_e	*current;
 	t_list_e	*new_node;
 
-	current = *env;
+	current = *inf;
 	if (!current)
 	{
-		new_node = create_env_node(str, NULL);
+		new_node = create_inf_node(line, NULL);
 		if (new_node)
-			*env = new_node;
+			*inf = new_node;
 	}
 	else
 	{
-		while (current->next)
-			current = current->next;
-		new_node = create_env_node(str, current);
+		while (current->f_ward)
+			current = current->f_ward;
+		new_node = create_inf_node(line, current);
 		if (new_node)
-			current->next = new_node;
+			current->f_ward = new_node;
 	}
 }
 
-/////////////set_environment_variable/////////////
 
-static int	is_key_match(const char *env_value, const char *str)
+static int	is_key_match(const char *inf_value, const char *line)
 {
 	int	key_len;
 
-	key_len = find_key_length(str);
-	return (ft_strncmp(str, env_value, key_len) == 0);
+	key_len = find_key_length(line);
+	return (ft_strncmp(line, inf_value, key_len) == 0);
 }
 
-static void	update_existing_env(t_list_e *env_t, char *str)
+static void	update_existing_inf(t_list_e *inf_t, char *line)
 {
-	free(env_t->content);
-	env_t->content = ft_strdup(str);
+	free(inf_t->content);
+	inf_t->content = ft_strdup(line);
 }
 
-void	set_environment_variable(char *str, t_list_e **env)
+void	set_environment_variable(char *line, t_list_e **inf)
 {
-	t_list_e	*env_t;
+	t_list_e	*inf_t;
 
-	env_t = *env;
-	while (env_t)
+	inf_t = *inf;
+	while (inf_t)
 	{
-		if (is_key_match(env_t->content, str))
+		if (is_key_match(inf_t->content, line))
 		{
-			update_existing_env(env_t, str);
+			update_existing_inf(inf_t, line);
 			return ;
 		}
-		env_t = env_t->next;
+		inf_t = inf_t->f_ward;
 	}
-	add_env_variable(env, str);
+	add_inf_variable(inf, line);
 }

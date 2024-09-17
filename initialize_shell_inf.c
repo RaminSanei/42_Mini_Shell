@@ -1,48 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   initialize_shell_inf.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:59:28 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/17 15:08:43 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 14:02:30 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char *argv[], char *inf[])
+void	initialize_shell_inf_helper(char **inf, t_mini *shell)
 {
-	t_mini	shell;
-	bool	stop;
+	while (*inf)
+	{
+		add_inf_variable(&shell->inf, *inf);
+		inf++;
+	}
+}
 
-	stop = false;
-	if (argc == 1 && argv[1] == NULL)
-	{
-		initialize_shell_inf(&shell, inf);
-		while (stop == false)
-		{
-			signal(SIGINT, sigint_handler);
-			signal(SIGQUIT, SIG_IGN);
-			shell.line = readline("@minishell> $ ");
-			if (!shell.line)
-			{
-				write(2, EXIT, 5);
-				stop = true;
-			}
-			else if (shell.line[0] != '\0')
-			{
-				add_history(shell.line);
-				parse_input(&shell);
-				run_action_execution(&shell, inf);
-			}
-		}
-	}
-	else
-	{
-		printf(ERROR_NO_ARG);
-		return (EXIT_FAILURE * -1);
-	}
-	return (EXIT_SUCCESS);
+void	initialize_shell_inf(t_mini *shell, char **inf)
+{
+	char	*work_dir;
+
+	work_dir = getcwd(NULL, 0);
+	shell->inf = NULL;
+	shell->drop_num = 0;
+	shell->old_work_dir = ft_strdup(work_dir);
+	shell->work_dir = ft_strdup(work_dir);
+	initialize_shell_inf_helper(inf, shell);
+	shell->c_list = NULL;
+	shell->elem = NULL;
 }

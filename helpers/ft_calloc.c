@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/08 18:46:26 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 13:44:11 by ssanei           ###   ########.fr       */
+/*   Created: 2024/03/15 18:30:36 by ssanei            #+#    #+#             */
+/*   Updated: 2024/09/16 17:17:02 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minishell.h"
+#include "../minishell.h"
 
-void	print_env_list(t_list_e *env)
+void	ft_bzero(void *str, size_t n)
 {
-	while (env)
+	char	*suc;
+
+	suc = (char *)str;
+	while (n > 0)
 	{
-		printf("%s\n", env->content);
-		env = env->next;
+		*(suc++) = 0;
+		n--;
 	}
 }
 
-int	ft_env(t_mini *obj, char *argv[])
+void	*ft_calloc(size_t count, size_t size)
 {
-	(void)argv;
-	print_env_list(obj->env);
-	return (EXIT_SUCCESS);
+	void	*b;
+
+	b = malloc(size * count);
+	if (!b)
+		return (NULL);
+	ft_bzero(b, size * count);
+	return (b);
 }

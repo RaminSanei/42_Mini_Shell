@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 15:28:58 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 12:16:42 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/16 15:09:45 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ void	skip_whitespace(char **input)
 		(*input)++;
 }
 
-bool	is_separator(char **str, char quote_char)
+bool	is_separator(char **line, char quote_char)
 {
 	char	current;
 	char	next;
 
-	current = **str;
-	next = *(*str + 1);
+	current = **line;
+	next = *(*line + 1);
 	if (quote_char != 0)
 		return (false);
 	if (current == 62 || current == 60)
@@ -64,16 +64,26 @@ int	allocate_memory_for_token(char *input)
 	return (index);
 }
 
-int	find_key_length(const char *str)
+int	find_key_length(const char *line)
 {
-	int	i;
+	int	k;
 
-	i = 0;
-	while (str[i] && str[i] != '=')
+	k = 0;
+	while (line[k] && line[k] != '=')
 	{
-		if (str[i] == ' ' || str[i] == '?')
+		if (line[k] == ' ' || line[k] == '?')
 			return (-1);
-		i++;
+		k++;
 	}
-	return ((str[i] == '=') ? i : 0);
+	return ((line[k] == '=') ? k : 0);
+}
+
+void	erase_pointer_array(char **array)
+{
+	int	k;
+
+	k = -1;
+	while (array[++k])
+		free(array[k]);
+	free(array);
 }

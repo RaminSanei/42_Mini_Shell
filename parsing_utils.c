@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/08/31 13:47:40 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/16 09:44:26 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,59 +14,59 @@
 
 
 
-int	check_pipe_syntax(t_list *toks)
+int	check_pipe_syntax(t_list *elem)
 {
-	if (toks->t_type == PIPE)
+	if (elem->kind == PIPE)
 	{
-		if (!toks->next || !toks->prev || toks->next->t_type == PIPE)
+		if (!elem->f_ward || !elem->b_ward || elem->f_ward->kind == PIPE)
 			return (ERROR_UNEXPECTED_PIPE);
 	}
 	return (EXIT_SUCCESS);
 }
 
-int	check_redirection_syntax(t_list *toks)
+int	check_redirection_syntax(t_list *elem)
 {
-	if ((toks->t_type == APPEND || toks->t_type == INPUT
-			|| toks->t_type == TRUNC || toks->t_type == HEREDOC) && (!toks->next
-			|| toks->next->t_type > ARG))
+	if ((elem->kind == APPEND || elem->kind == INPUT
+			|| elem->kind == TRUNC || elem->kind == HEREDOC) && (!elem->f_ward
+			|| elem->f_ward->kind > ARG))
 		return (ERROR_UNEXPECTED_NEWLINE);
 	return (EXIT_SUCCESS);
 }
 
-int	check_invalid_syntax(t_list *toks)
+int	check_invalid_syntax(t_list *elem)
 {
-	if ((ft_strchr(toks->content, 34) == NULL && ft_strchr(toks->content,
-				39) == NULL) && (ft_strstr(toks->content, ">>>")
-			|| ft_strstr(toks->content, "<<<")))
+	if ((ft_strchr(elem->content, 34) == NULL && ft_strchr(elem->content,
+				39) == NULL) && (ft_strstr(elem->content, ">>>")
+			|| ft_strstr(elem->content, "<<<")))
 		return (ERROR_INVALID_SYNTAX);
 	return (EXIT_SUCCESS);
 }
 
-int	analyze_redirection(t_list *toks)
+int	analyze_redirection(t_list *elem)
 {
 	int	result;
 
-	while (toks)
+	while (elem)
 	{
-		result = check_pipe_syntax(toks);
+		result = check_pipe_syntax(elem);
 		if (result != EXIT_SUCCESS)
 			return (result);
-		result = check_redirection_syntax(toks);
+		result = check_redirection_syntax(elem);
 		if (result != EXIT_SUCCESS)
 			return (result);
-		result = check_invalid_syntax(toks);
+		result = check_invalid_syntax(elem);
 		if (result != EXIT_SUCCESS)
 			return (result);
-		toks = toks->next;
+		elem = elem->f_ward;
 	}
 	return (EXIT_SUCCESS);
 }
 
-int	check_redirection_syntax(t_list *toks)
+int	check_all_redirection_syntax(t_list *elem)
 {
 	int	redirection_status;
 
-	redirection_status = analyze_redirection(toks);
+	redirection_status = analyze_redirection(elem);
 	if (redirection_status == ERROR_UNEXPECTED_NEWLINE)
 	{
 		printf(ERROR_UNEX_NLINE);
@@ -80,9 +80,9 @@ int	check_redirection_syntax(t_list *toks)
 	return (EXIT_SUCCESS);
 }
 
-int	validate_syntax(t_list *toks)
+int	validate_syntax(t_list *elem)
 {
-	if (check_redirection_syntax(toks) == EXIT_FAILURE)
+	if (check_all_redirection_syntax(elem) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

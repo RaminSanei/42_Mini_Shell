@@ -6,90 +6,90 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:40 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/10 10:22:36 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 13:14:52 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minishell.h"
+#include "../minishell.h"
 
-void	ft_remove_node(t_list_e **node)
+void	delete_node_from_list(t_list_e **node)
 {
 	t_list_e	*to_remove;
 
 	if (node == NULL || *node == NULL)
 		return ;
 	to_remove = *node;
-	if (to_remove->prev == NULL)
+	if (to_remove->b_ward == NULL)
 	{
-		*node = to_remove->next;
-		if (to_remove->next)
-			to_remove->next->prev = NULL;
+		*node = to_remove->f_ward;
+		if (to_remove->f_ward)
+			to_remove->f_ward->b_ward = NULL;
 	}
-	else if (to_remove->next == NULL)
-		to_remove->prev->next = NULL;
+	else if (to_remove->f_ward == NULL)
+		to_remove->b_ward->f_ward = NULL;
 	else
 	{
-		to_remove->prev->next = to_remove->next;
-		to_remove->next->prev = to_remove->prev;
+		to_remove->b_ward->f_ward = to_remove->f_ward;
+		to_remove->f_ward->b_ward = to_remove->b_ward;
 	}
 	free(to_remove);
 }
 
-void	delete_env(const char *str, t_list_e **env)
+void	discard_inf_entry(const char *line, t_list_e **inf)
 {
-	t_list_e	*env_t;
+	t_list_e	*inf_t;
 	size_t		str_len;
-	int			equal;
+	int			match;
 
-	env_t = *env;
-	str_len = strlen(str);
-	while (env_t)
+	inf_t = *inf;
+	str_len = strlen(line);
+	while (inf_t)
 	{
-		equal = find_key_length(env_t->content);
-		if (equal != -1 && strncmp(str, env_t->content, str_len) == 0
-			&& strncmp(env_t->content, str, equal) == 0)
+		match = find_key_length(inf_t->content);
+		if (match != MINUS1 && strncmp(line, inf_t->content, str_len) == 0
+			&& strncmp(inf_t->content, line, match) == 0)
 		{
-			ft_remove_node(&env_t);
+			delete_node_from_list(&inf_t);
 			return ;
 		}
-		env_t = env_t->next;
+		inf_t = inf_t->f_ward;
 	}
 }
-///////////////////////////////////////////////
+
 void	handle_unset_error(const char *arg, const char *message)
 {
 	printf("unset: %s: %s\n", arg, message);
 }
 
-int	process_unset_arg(t_mini *obj, const char *arg)
+int	process_unset_arg(t_mini *shell, char *arg)
 {
 	int	equal_position;
 
 	equal_position = find_key_length(arg);
 	if (equal_position > 0)
 	{
-		handle_unset_error(arg, "invalid parameter name");
+		handle_unset_error(arg, INV_PARAM_NAME);
 		return (MINUS1);
 	}
-	else if (equal_position == -1)
+	else if (equal_position == MINUS1)
 	{
-		handle_unset_error(arg, "not valid in this context");
+		handle_unset_error(arg, INV_CTX);
 		return (MINUS1);
 	}
-	delete_env(arg, &obj->env);
+	discard_inf_entry(arg, &shell->inf);
 	return (EXIT_SUCCESS);
 }
 
-int	ft_unset(t_mini *obj, char *argv[])
+int	built_unset(t_mini *shell, char *argv[])
 {
-	int	i;
+	int	k;
 
-	i = 1;
-	while (argv[i])
+	k = 1;
+	while (argv[k])
 	{
-		if (process_unset_arg(argv[i], obj) == MINUS1)
+		if (process_unset_arg(shell, argv[k]) == MINUS1)
 			return (MINUS1);
-		i++;
+		k++;
 	}
 	return (EXIT_SUCCESS);
 }

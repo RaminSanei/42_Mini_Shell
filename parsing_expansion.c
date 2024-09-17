@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 15:02:50 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/09 12:24:07 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 13:50:34 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,26 @@ char	*ft_strnjoin(char *s1, char *s2, int flag)
 	else
 		result = ft_strjoin(s1, s2);
 	if (flag != 3 && s1)
+	// if (flag != 3)
 		free(s1);
 	if (flag > 1 && s2)
+	// if (flag > 1)
 		free(s2);
 	return (result);
 }
 
-char	*handle_special_cases(const char *key, int exit_num)
+char	*handle_special_cases(const char *key, int drop_num)
 {
 	if (*key == '\0')
 		return (ft_strdup("$"));
 	else if (*key == '$')
 		return (ft_itoa(getpid()));
 	else if (*key == '?')
-		return (ft_itoa(exit_num));
+		return (ft_itoa(drop_num));
 	return (NULL);
 }
 
-char	*lookup_env_variable(t_list_e *env_list, const char *key)
+char	*lookup_inf_variable(t_list_e *inf_list, const char *key)
 {
 	char	*value;
 	int		key_length;
@@ -48,51 +50,51 @@ char	*lookup_env_variable(t_list_e *env_list, const char *key)
 
 	value = NULL;
 	key_length = ft_strlen(key);
-	while (env_list)
+	while (inf_list)
 	{
-		key_equal_length = find_key_length(env_list->content);
-		if (ft_strncmp(key, env_list->content, key_length) == 0
-			&& ft_strncmp(env_list->content, key, key_equal_length) == 0)
+		key_equal_length = find_key_length(inf_list->content);
+		if (ft_strncmp(key, inf_list->content, key_length) == 0
+			&& ft_strncmp(inf_list->content, key, key_equal_length) == 0)
 		{
-			value = ft_strdup(ft_strchr(env_list->content, '=') + 1);
+			value = ft_strdup(ft_strchr(inf_list->content, '=') + 1);
 			break ;
 		}
-		env_list = env_list->next;
+		inf_list = inf_list->f_ward;
 	}
 	return (value);
 }
 
-char	*retrieve_env_value(t_mini *shell, const char *key)
+char	*retrieve_inf_value(t_mini *shell, const char *key)
 {
 	char	*result;
 
-	result = handle_special_cases(key, shell->exit_num);
+	result = handle_special_cases(key, shell->drop_num);
 	if (result != NULL)
 		return (result);
-	result = lookup_env_variable(shell->env, key);
+	result = lookup_inf_variable(shell->inf, key);
 	if (result != NULL)
 		return (result);
 	return (ft_strdup(""));
 }
 
-char	*expand_token(t_mini *shell, char *token)
+char	*expand_token(t_mini *shell, char *action)
 {
-	if (ft_strchr(token, '$'))
-		return (ft_strnjoin(NULL, retrieve_env_value(shell, token + 1), 2));
-	return (ft_strdup(token));
+	if (ft_strchr(action, '$'))
+		return (ft_strnjoin(NULL, retrieve_inf_value(shell, action + 1), 2));
+	return (ft_strdup(action));
 }
 
-char	*non_qts(t_mini *shell, char **tokens, int *index)
+char	*non_qts(t_mini *shell, char **actions, int *index)
 {
 	char	*result;
 	char	*expanded_token;
 	char	*temp;
 
 	result = NULL;
-	while (ft_strcmp(tokens[*index], "\"") && ft_strcmp(tokens[*index], "\'")
-			&& tokens[*index])
+	while (actions[*index] && ft_strcmp(actions[*index], "\"")
+			&& ft_strcmp(actions[*index], "\'"))
 	{
-		expanded_token = expand_token(shell, tokens[*index]);
+		expanded_token = expand_token(shell, actions[*index]);
 		if (result)
 		{
 			temp = result;
@@ -108,81 +110,81 @@ char	*non_qts(t_mini *shell, char **tokens, int *index)
 	return (result);
 }
 
-char	double_qts(t_mini *shell, char **tokens, int *index)
+char	*double_qts(t_mini *shell, char **actions, int *index)
 {
 	char	*result;
 
 	result = NULL;
-	if (!ft_strcmp(tokens[*index], "\"") && tokens[*index])
+	if (!ft_strcmp(actions[*index], "\"") && actions[*index])
 		(*index)++;
-	while (ft_strcmp(tokens[*index], "\"") && tokens[*index])
+	while (ft_strcmp(actions[*index], "\"") && actions[*index])
 	{
-		if (ft_strchr(tokens[*index], '$'))
-			result = ft_strnjoin(result, retrieve_env_value(shell,
-						tokens[*index] + 1), 2);
+		if (ft_strchr(actions[*index], '$'))
+			result = ft_strnjoin(result, retrieve_inf_value(shell,
+						actions[*index] + 1), 2);
 		else
-			result = ft_strnjoin(result, tokens[*index], 1);
+			result = ft_strnjoin(result, actions[*index], 1);
 		(*index)++;
 	}
-	if (!ft_strcmp(tokens[*index], "\"") && tokens[*index])
+	if (!ft_strcmp(actions[*index], "\"") && actions[*index])
 		(*index)++;
 	return (result);
 }
 
-char	*single_qts(char **tokens, int *index)
+char	*single_qts(char **actions, int *index)
 {
 	char	*result;
 
 	result = NULL;
-	if (!ft_strcmp(tokens[*index], "\'") && tokens[*index])
+	if (!ft_strcmp(actions[*index], "\'") && actions[*index])
 		(*index)++;
-	while (ft_strcmp(tokens[*index], "\'") && tokens[*index])
+	while (ft_strcmp(actions[*index], "\'") && actions[*index])
 	{
-		result = ft_strnjoin(result, tokens[*index], 1);
+		result = ft_strnjoin(result, actions[*index], 1);
 		(*index)++;
 	}
-	if (!ft_strcmp(tokens[*index], "\'") && tokens[*index])
+	if (!ft_strcmp(actions[*index], "\'") && actions[*index])
 		(*index)++;
 	return (result);
 }
 
-void	expand_word(t_mini *shell, t_list *toks, char **arguments, int *index)
+void	expand_word(t_mini *shell, t_list *elem, char **arguments, int *index)
 {
-	if (!ft_strcmp(arguments[*index], "\'"))
-		toks->content = ft_strnjoin(toks->content, single_qts(arguments, index),
-				2);
-	else if (!ft_strcmp(arguments[*index], "\""))
-		toks->content = ft_strnjoin(toks->content, double_qts(shell, arguments,
+	if (!ft_strcmp(arguments[*index], "\""))
+		elem->content = ft_strnjoin(elem->content, double_qts(shell, arguments,
 					index), 2);
+	else if (!ft_strcmp(arguments[*index], "\'"))
+		elem->content = ft_strnjoin(elem->content, single_qts(arguments, index),
+				2);
 	else
-		toks->content = ft_strnjoin(toks->content, non_qts(shell, arguments,
+		elem->content = ft_strnjoin(elem->content, non_qts(shell, arguments,
 					index), 2);
 }
 
-void	process_token(t_mini *shell, t_list *toks)
+void	process_token(t_mini *shell, t_list *elem)
 {
-	char	**split_tokens;
+	char	**split_actions;
 	int		index;
 
-	split_tokens = ft_split(toks->content, ' ');
-	free(toks->content);
-	toks->content = NULL;
+	split_actions = ft_split(elem->content, ' ');
+	free(elem->content);
+	elem->content = NULL;
 	index = 0;
-	while (split_tokens[index])
+	while (split_actions[index])
 	{
-		expand_word(shell, toks, split_tokens, &index);
+		expand_word(shell, elem, split_actions, &index);
 	}
-	free_word_array(split_tokens);
+	erase_pointer_array(split_actions);
 }
 
 void	perform_expansion(t_mini *shell)
 {
-	t_list *current_token;
+	t_list	*current_token;
 
-	current_token = shell->toks;
+	current_token = shell->elem;
 	while (current_token)
 	{
 		process_token(shell, current_token);
-		current_token = current_token->next;
+		current_token = current_token->f_ward;
 	}
 }

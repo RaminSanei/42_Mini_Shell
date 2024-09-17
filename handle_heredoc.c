@@ -6,68 +6,76 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/08 09:55:15 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/16 13:17:53 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free_split(char **tokens)
+void	ft_free_split(char **actions)
 {
 	char	**temp;
 
-	if (!tokens)
+	if (!actions)
 		return ;
-	temp = tokens;
+	temp = actions;
 	while (*temp)
 	{
 		free(*temp);
 		temp++;
 	}
-	free(tokens);
+	free(actions);
 }
 
 char	*expand_line(t_mini *shell, char *line)
 {
-	char	**tokens;
+	char	**actions;
 	char	*expanded_line;
-	int		i;
+	int		k;
 
 	if (!line || ft_strcmp(line, "") == 0)
 		return (ft_strdup(""));
-	tokens = ft_split(line, ' ');
+	actions = ft_split(line, ' ');
 	free(line);
 	expanded_line = NULL;
-	i = 0;
-	while (tokens[i])
+	k = 0;
+	while (actions[k])
 	{
-		if (ft_strrchr(tokens[i], '$'))
-			expanded_line = ft_strnjoin(expanded_line, get_value(shell,
-						tokens[i] + 1), 2);
+		if (ft_strrchr(actions[k], '$'))
+			expanded_line = ft_strnjoin(expanded_line, retrieve_inf_value(shell,
+						actions[k] + 1), 2);
 		else
-			expanded_line = ft_strnjoin(expanded_line, tokens[i], 2);
-		i++;
+			expanded_line = ft_strnjoin(expanded_line, actions[k], 2);
+		k++;
 	}
 	expanded_line = ft_strnjoin(expanded_line, "\n", 1);
-	ft_free_split(tokens);
+	ft_free_split(actions);
 	return (expanded_line);
 }
 
-void	write_file_contents(int fd, t_mini *shell, const char *stop_word)
+void	write_file_contents(int fd, t_mini *shell, char *stop_word)
 {
 	char	*line;
+	bool	stop;
 
-	while (1)
+	stop = false;
+	while (stop == false)
 	{
 		line = readline("> ");
-		if (!line || ft_strcmp(line, stop_word) == 0)
+		if (!line)
+		{
+			close(fd);
+			stop = true;
+		}
+		else if (ft_strcmp(line, stop_word) == 0)
 		{
 			free(line);
-			break ;
+			close(fd);
+			stop = true;
 		}
 		line = expand_line(shell, line);
 		write(fd, line, ft_strlen(line));
-		free(line);
+		// free(line);
 	}
 }
 
@@ -76,10 +84,10 @@ char	*generate_file_name(int index)
 	return (ft_strnjoin("heredoc_", ft_itoa(index), 3));
 }
 
-char	*create_heredoc_file(t_mini *shell, const char *delimiter, int index)
+char	*create_heredoc_file(t_mini *shell, char *delimiter, int index)
 {
-	char	*file_name;
 	int		fd;
+	char	*file_name;
 
 	file_name = generate_file_name(index);
 	if (!file_name)
@@ -91,61 +99,60 @@ char	*create_heredoc_file(t_mini *shell, const char *delimiter, int index)
 		return (NULL);
 	}
 	write_file_contents(fd, shell, delimiter);
-	close(fd);
+	// close(fd);
 	return (file_name);
 }
 
-void	update_lexer_string(t_list_l *lexer, const char *file_path)
+void	update_scanner_string(t_list_l *scanner, char *file_path)
 {
 	char	*new_str;
 
-	if (lexer->content)
+	if (scanner->content)
 	{
-		new_str = ft_strnjoin(lexer->content, file_path, 4);
-		free(lexer->content);
-		lexer->content = new_str;
+		new_str = ft_strnjoin(scanner->content, file_path, 4);
+		free(scanner->content);
+		scanner->content = new_str;
 	}
 }
 
-void	handle_heredoc_token(t_list_l *lexer, t_mini *shell, int index)
+void	handle_heredoc_token(t_list_l *scanner, t_mini *shell, int index)
 {
 	char	*file_path;
 
-	file_path = create_heredoc_file(shell, lexer->content, index);
+	file_path = create_heredoc_file(shell, scanner->content, index);
 	if (file_path)
 	{
-		update_lexer_string(lexer, file_path);
+		update_scanner_string(scanner, file_path);
 		free(file_path);
 	}
 }
 
-void	process_command_heredocs(t_list_c *cmd, t_mini *shell, int *index)
+void	process_action_heredocs(t_list_c *c_list, t_mini *shell, int *index)
 {
-	t_list_l	*lexer;
+	t_list_l	*scanner;
 
-	lexer = cmd->lexer;
-	while (lexer)
+	scanner = c_list->scanner;
+	while (scanner)
 	{
-		if (lexer->index == HEREDOC)
+		if (scanner->type == HEREDOC)
 		{
-			handle_heredoc_token(lexer, shell, *index);
+			handle_heredoc_token(scanner, shell, *index);
 			(*index)++;
 		}
-		lexer = lexer->next;
+		scanner = scanner->f_ward;
 	}
 }
 
 void	handle_heredoc(t_mini *shell)
 {
-	t_list_l	*lexer;
-	int			i;
-	t_list_c	*cmd;
+	int			k;
+	t_list_c	*c_list;
 
-	i = 0;
-	cmd = shell->cmd;
-	while (cmd)
+	k = 0;
+	c_list = shell->c_list;
+	while (c_list)
 	{
-		process_command_heredocs(cmd, shell, &i);
-		cmd = cmd->next;
+		process_action_heredocs(c_list, shell, &k);
+		c_list = c_list->f_ward;
 	}
 }

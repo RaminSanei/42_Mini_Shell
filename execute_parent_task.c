@@ -1,41 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wait_for_all_processes.c                           :+:      :+:    :+:   */
+/*   execute_parent_task.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:31 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/16 10:56:12 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/16 10:41:25 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	wait_for_child_process(t_mini *shell, int process_index,
-		int *exit_status)
+void	setup_pipe_read(t_mini *shell, int pipe_fds[2])
 {
-	waitpid(shell->process_num[process_index], exit_status, 0);
-	set_and_return_drop_num(shell, *exit_status);
+	handle_error_void(shell, dup2(pipe_fds[0], STDIN_FILENO), "dup2 error");
+	safely_close_file_descriptors(pipe_fds[1], pipe_fds[0]);
 }
 
-void	release_memory(t_mini *shell)
+void	execute_parent_task(t_mini *shell, t_list_c *current_act,
+		int pipe_fds[2])
 {
-	if (shell->process_num)
-		free(shell->process_num);
-}
-
-void	wait_for_all_processes(t_mini *shell, int *exit_status)
-{
-	int	num_processes;
-	int	k;
-
-	num_processes = get_action_count(shell);
-	k = 0;
-	while (k < num_processes)
+	if (current_act->f_ward == NULL)
 	{
-		wait_for_child_process(shell, k, exit_status);
-		k++;
+		close(STDIN_FILENO);
+		return ;
 	}
-	release_memory(shell);
+	setup_pipe_read(shell, pipe_fds);
 }
