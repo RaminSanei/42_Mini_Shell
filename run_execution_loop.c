@@ -6,13 +6,11 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:31 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/16 12:43:08 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 16:19:29 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/////////////////////////////////////////////////////////child_process.c
 
 int	get_action_count(t_mini *shell)
 {
@@ -30,8 +28,6 @@ int	get_action_count(t_mini *shell)
 	}
 	return (num_actions);
 }
-
-/////////////////////////////////////////////////////////
 
 void	handle_child_process(t_mini *shell, t_list_c *curr_act, int *fd_pipe,
 		char **inf)

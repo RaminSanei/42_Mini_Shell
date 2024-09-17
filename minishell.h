@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:41:18 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/17 14:02:51 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 18:27:00 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@
 
 // extern int				drop_num;
 
-typedef enum e_token_type
+typedef enum e_action_type
 {
 	EMPTY,
 	CMD,
@@ -62,13 +62,13 @@ typedef enum e_token_type
 	TRUNC,
 	HEREDOC,
 	PIPE,
-}						t_token_type;
+}						t_action_type;
 
 typedef struct s_list_l
 {
 	char				*content;
 	struct s_list_l		*f_ward;
-	enum e_token_type	type;
+	enum e_action_type	type;
 }						t_list_l;
 
 typedef struct s_list_e
@@ -81,7 +81,7 @@ typedef struct s_list_e
 typedef struct s_list
 {
 	char				*content;
-	enum e_token_type	kind;
+	enum e_action_type	kind;
 	struct s_list		*b_ward;
 	struct s_list		*f_ward;
 }						t_list;
@@ -114,7 +114,7 @@ typedef struct s_builtin_c
 	char				*name;
 	t_act_func			function;
 }						t_builtin_c;
-//////////////////////////////////// libft functions////////////////////////////////////
+//////////////////////////////////// libft functions////////////////////////////
 char					*ft_strdup(char *s1);
 size_t					ft_strlen(const char *str);
 void					ft_putstr_fd(char *s, int fd);
@@ -130,23 +130,21 @@ char					**ft_split(char *s, char c);
 void					*ft_calloc(size_t count, size_t size);
 char					*ft_itoa(int n);
 
-//////////////////////////////////// libft functions////////////////////////////////////
-
-//////////////////////////////////// mini_shell functions////////////////////////////////////
-void					sigint_handler(int signal);
-int						parse_input(t_mini *shell);
+//////////////////////////////////// mini_shell functions//////////////////
+void					handle_interrupt(int signal);
+void					parse_input(t_mini *shell);
 int						set_and_return_drop_num(t_mini *shell, int code);
 void					*safe_malloc(size_t size);
 void					erase_pointer_array(char **array);
 void					skip_whitespace(char **input);
 bool					is_separator(char **line, char quote_char);
-int						allocate_memory_for_token(char *input);
+int						allocate_memory_for_action(char *input);
 bool					are_strings_equal(char *s1, char *s2);
 int						validate_quotes(t_mini *shell);
 int						validate_syntax(t_list *elem);
 void					perform_expansion(t_mini *shell);
 t_list_c				*build_action_list(t_list *elem);
-int						run_action_execution(t_mini *shell, char **inf);
+void					run_action_execution(t_mini *shell, char **inf);
 void					handle_heredoc(t_mini *shell);
 bool					is_builtin_action(char **action);
 char					*retrieve_inf_value(t_mini *shell, const char *key);
@@ -209,6 +207,17 @@ int						configure_append_stream(t_list_l *red);
 int						configure_truncate_stream(t_list_l *red);
 char					*construct_full_address_helper(const char *adr_element,
 							const char *action, int adr_len, int ac_len);
-void					initialize_shell_inf(t_mini *shell, char **inf);							
-//////////////////////////////////// mini_shell functions////////////////////////////////////
+void					initialize_shell_inf(t_mini *shell, char **inf);
+void					ft_free_split(char **actions);
+char					*expand_line(t_mini *shell, char *line);
+void					write_file_contents(int fd, t_mini *shell,
+							char *stop_word);
+char					*generate_file_name(int index);
+char					*handle_special_cases(const char *key, int drop_num);
+void					expand_word(t_mini *shell, t_list *elem,
+							char **arguments, int *index);
+char					*expand_action(t_mini *shell, char *action);
+bool					check_unclosed_quotes(const char *line);
+t_list					*generate_actions(char **input);
+int						check_redirection_syntax(t_list *elem);
 #endif

@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:23 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/17 13:09:26 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 16:31:24 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ static char	*concat_with_delim(char *line, const char *to_add)
 	size_t	str_len;
 	size_t	add_len;
 
-	str_len = (line) ? strlen(line) : 0;
+	str_len = 0;
 	add_len = strlen(to_add);
+	if (line)
+		str_len = strlen(line);
 	new_str = safe_malloc(str_len + add_len + 1);
 	if (line)
 		memcpy(new_str, line, str_len);

@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:14 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/16 15:27:33 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 16:31:47 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	exit_free(t_mini *shell)
 		shell->work_dir = NULL;
 	}
 }
-
 
 static bool	is_numeric(const char *line)
 {

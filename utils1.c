@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 15:28:58 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/16 15:09:45 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 16:27:50 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ bool	is_separator(char **line, char quote_char)
 	return (false);
 }
 
-int	allocate_memory_for_token(char *input)
+int	allocate_memory_for_action(char *input)
 {
 	int		index;
 	char	quote_char;
@@ -69,13 +69,16 @@ int	find_key_length(const char *line)
 	int	k;
 
 	k = 0;
-	while (line[k] && line[k] != '=')
+	while (line[k] && line[k] != 61)
 	{
-		if (line[k] == ' ' || line[k] == '?')
-			return (-1);
+		if (line[k] == 32 || line[k] == 63)
+			return (MINUS1);
 		k++;
 	}
-	return ((line[k] == '=') ? k : 0);
+	if (line[k] == 61)
+		return (k);
+	else
+		return (0);
 }
 
 void	erase_pointer_array(char **array)

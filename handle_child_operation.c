@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:31 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/17 13:53:21 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 16:00:55 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ void	handle_child_operation(t_mini *shell, t_list_c *current_act, char **inf)
 	else
 		final_address = determine_action_address(shell,
 				current_act->content[0]);
-
 	execve(final_address, current_act->content, inf);
 	free(final_address);
 	perror(ERROR_EXE);

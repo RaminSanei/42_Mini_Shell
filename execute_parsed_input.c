@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/17 13:47:09 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 18:03:01 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,21 @@ int	execute_builtin_actions(t_mini *shell, t_list_c *current_action)
 	return (EXIT_SUCCESS);
 }
 
-int	run_action_execution(t_mini *shell, char **inf)
+void	run_action_execution(t_mini *shell, char **inf)
 {
 	int	saved_stdin;
 	int	exit_status;
 	int	saved_stdout;
 
 	if (save_fds(&saved_stdin, &saved_stdout, shell) == 130)
-		return (130);
+		shell->drop_num = 130;
 	handle_heredoc(shell);
 	if (shell->c_list && shell->c_list->content[0]
 		&& is_builtin_action(shell->c_list->content)
 		&& shell->c_list->f_ward == NULL)
 	{
 		if (execute_builtin_actions(shell, shell->c_list) == 130)
-			return (130);
+			shell->drop_num = 130;
 	}
 	else if (shell->c_list && shell->c_list->content[0])
 	{
@@ -71,5 +71,5 @@ int	run_action_execution(t_mini *shell, char **inf)
 		wait_for_all_processes(shell, &exit_status);
 	}
 	restore_fds(shell, saved_stdin, saved_stdout);
-	return (130);
+	shell->drop_num = 130;
 }

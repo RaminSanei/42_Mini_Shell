@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/17 13:43:41 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 15:39:05 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,15 @@ void	add_scanner_to_list(t_list_l **scanner_list, char *line, int type)
 	current_node->f_ward = new_node;
 }
 
-void	handle_redirection(t_list_l **scanner_list, t_list **current_token)
+void	handle_redirection(t_list_l **scanner_list, t_list **current_action)
 {
-	if (!current_token || !(*current_token) || !(*current_token)->f_ward)
+	if (!current_action || !(*current_action) || !(*current_action)->f_ward)
 		return ;
-	if ((*current_token) && (*current_token)->f_ward)
+	if ((*current_action) && (*current_action)->f_ward)
 	{
-		add_scanner_to_list(scanner_list, (*current_token)->f_ward->content,
-			(*current_token)->kind);
-		*current_token = (*current_token)->f_ward;
+		add_scanner_to_list(scanner_list, (*current_action)->f_ward->content,
+			(*current_action)->kind);
+		*current_action = (*current_action)->f_ward;
 	}
 }
 

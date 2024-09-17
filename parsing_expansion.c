@@ -6,41 +6,11 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 15:02:50 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/17 13:50:34 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 15:56:29 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*ft_strnjoin(char *s1, char *s2, int flag)
-{
-	char	*result;
-
-	if (!s1 && !s2)
-		return (NULL);
-	if (flag == 4)
-		result = ft_strdup(s2);
-	else
-		result = ft_strjoin(s1, s2);
-	if (flag != 3 && s1)
-	// if (flag != 3)
-		free(s1);
-	if (flag > 1 && s2)
-	// if (flag > 1)
-		free(s2);
-	return (result);
-}
-
-char	*handle_special_cases(const char *key, int drop_num)
-{
-	if (*key == '\0')
-		return (ft_strdup("$"));
-	else if (*key == '$')
-		return (ft_itoa(getpid()));
-	else if (*key == '?')
-		return (ft_itoa(drop_num));
-	return (NULL);
-}
 
 char	*lookup_inf_variable(t_list_e *inf_list, const char *key)
 {
@@ -77,91 +47,14 @@ char	*retrieve_inf_value(t_mini *shell, const char *key)
 	return (ft_strdup(""));
 }
 
-char	*expand_token(t_mini *shell, char *action)
+char	*expand_action(t_mini *shell, char *action)
 {
 	if (ft_strchr(action, '$'))
 		return (ft_strnjoin(NULL, retrieve_inf_value(shell, action + 1), 2));
 	return (ft_strdup(action));
 }
 
-char	*non_qts(t_mini *shell, char **actions, int *index)
-{
-	char	*result;
-	char	*expanded_token;
-	char	*temp;
-
-	result = NULL;
-	while (actions[*index] && ft_strcmp(actions[*index], "\"")
-			&& ft_strcmp(actions[*index], "\'"))
-	{
-		expanded_token = expand_token(shell, actions[*index]);
-		if (result)
-		{
-			temp = result;
-			result = ft_strjoin(temp, expanded_token);
-			free(temp);
-		}
-		else
-		{
-			result = expanded_token;
-		}
-		(*index)++;
-	}
-	return (result);
-}
-
-char	*double_qts(t_mini *shell, char **actions, int *index)
-{
-	char	*result;
-
-	result = NULL;
-	if (!ft_strcmp(actions[*index], "\"") && actions[*index])
-		(*index)++;
-	while (ft_strcmp(actions[*index], "\"") && actions[*index])
-	{
-		if (ft_strchr(actions[*index], '$'))
-			result = ft_strnjoin(result, retrieve_inf_value(shell,
-						actions[*index] + 1), 2);
-		else
-			result = ft_strnjoin(result, actions[*index], 1);
-		(*index)++;
-	}
-	if (!ft_strcmp(actions[*index], "\"") && actions[*index])
-		(*index)++;
-	return (result);
-}
-
-char	*single_qts(char **actions, int *index)
-{
-	char	*result;
-
-	result = NULL;
-	if (!ft_strcmp(actions[*index], "\'") && actions[*index])
-		(*index)++;
-	while (ft_strcmp(actions[*index], "\'") && actions[*index])
-	{
-		result = ft_strnjoin(result, actions[*index], 1);
-		(*index)++;
-	}
-	if (!ft_strcmp(actions[*index], "\'") && actions[*index])
-		(*index)++;
-	return (result);
-}
-
-void	expand_word(t_mini *shell, t_list *elem, char **arguments, int *index)
-{
-	if (!ft_strcmp(arguments[*index], "\""))
-		elem->content = ft_strnjoin(elem->content, double_qts(shell, arguments,
-					index), 2);
-	else if (!ft_strcmp(arguments[*index], "\'"))
-		elem->content = ft_strnjoin(elem->content, single_qts(arguments, index),
-				2);
-	else
-		elem->content = ft_strnjoin(elem->content, non_qts(shell, arguments,
-					index), 2);
-}
-
-void	process_token(t_mini *shell, t_list *elem)
+void	process_action(t_mini *shell, t_list *elem)
 {
 	char	**split_actions;
 	int		index;
@@ -179,12 +72,12 @@ void	process_token(t_mini *shell, t_list *elem)
 
 void	perform_expansion(t_mini *shell)
 {
-	t_list	*current_token;
+	t_list	*current_action;
 
-	current_token = shell->elem;
-	while (current_token)
+	current_action = shell->elem;
+	while (current_action)
 	{
-		process_token(shell, current_token);
-		current_token = current_token->f_ward;
+		process_action(shell, current_action);
+		current_action = current_action->f_ward;
 	}
 }

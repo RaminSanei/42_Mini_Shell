@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 14:09:01 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/16 17:59:32 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 16:24:00 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	*safe_malloc(size_t size)
 	return (ptr);
 }
 
-///// 1. handle_error_int for dup and fork
 int	handle_error_int(t_mini *shell, int result, const char *error_msg)
 {
 	if (result == -1)
@@ -49,7 +48,6 @@ int	handle_error_int(t_mini *shell, int result, const char *error_msg)
 	return (result);
 }
 
-///// 2. handle_error_void for dup2 and pipe
 void	handle_error_void(t_mini *shell, int result, const char *error_msg)
 {
 	if (result == -1)
@@ -59,4 +57,3 @@ void	handle_error_void(t_mini *shell, int result, const char *error_msg)
 		exit(set_and_return_drop_num(shell, 130));
 	}
 }
-

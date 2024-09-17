@@ -6,7 +6,7 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:46:43 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/17 13:16:43 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 16:32:50 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	add_inf_variable(t_list_e **inf, char *line)
 			current->f_ward = new_node;
 	}
 }
-
 
 static int	is_key_match(const char *inf_value, const char *line)
 {

@@ -6,13 +6,11 @@
 /*   By: ssanei <ssanei@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 17:06:12 by ssanei            #+#    #+#             */
-/*   Updated: 2024/09/16 09:44:26 by ssanei           ###   ########.fr       */
+/*   Updated: 2024/09/17 16:23:40 by ssanei           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 int	check_pipe_syntax(t_list *elem)
 {
@@ -21,15 +19,6 @@ int	check_pipe_syntax(t_list *elem)
 		if (!elem->f_ward || !elem->b_ward || elem->f_ward->kind == PIPE)
 			return (ERROR_UNEXPECTED_PIPE);
 	}
-	return (EXIT_SUCCESS);
-}
-
-int	check_redirection_syntax(t_list *elem)
-{
-	if ((elem->kind == APPEND || elem->kind == INPUT
-			|| elem->kind == TRUNC || elem->kind == HEREDOC) && (!elem->f_ward
-			|| elem->f_ward->kind > ARG))
-		return (ERROR_UNEXPECTED_NEWLINE);
 	return (EXIT_SUCCESS);
 }
 
