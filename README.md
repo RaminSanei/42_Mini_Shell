@@ -22,19 +22,27 @@ This project replicates core shell functionalities, giving hands-on experience w
 
 1. **Clone the repository**:
 
+```bash
 git clone https://github.com/RaminSanei/42_Mini_Shell.git
+```
 
 2. **Navigate into the project directory**:
 
+```bash
 cd 42_Mini_Shell
+```
 
 3. **Compile the project using the Makefile**:
 
+```bash
 make
+```
 
 4. **Run the shell**:
 
+```bash
 ./minishell
+```
 
 ---
 
@@ -43,6 +51,12 @@ make
 - Upon running, the shell will display the prompt `>msh`.  
 - Enter commands as you would in a normal terminal.  
 - To exit the shell, type `exit`.  
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please fork the repo, create a branch, and submit a pull request.  
 
 ---
 
